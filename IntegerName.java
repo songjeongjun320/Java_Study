@@ -16,8 +16,20 @@ public class IntegerName
       {
          // Recursively call intName (Hint: use return)
          /* Your code goes here */
-         
-
+        int n = (int)part / 1000;
+        if (n >= 20){
+            part = part % 10000;
+            int j = (int) part/1000;
+            name = tensName(n) + " " + digitName(j) + " thousand ";
+        }
+        else if (n > 10){
+            name = teenName(n) + " thousand ";
+        }
+        else{
+            name = digitName(n) + " thousand";
+        }
+        part = part % 1000;
+        return " " + name + intName(part);
       }
       if (part >= 100)
       {
@@ -103,8 +115,9 @@ public class IntegerName
 
    public static void main(String[] args)
    {
-      Scanner in = new Scanner(System.in);
-      int number = in.nextInt();
+      Scanner scnr = new Scanner(System.in);
+      int number = scnr.nextInt();
       System.out.println(intName(number));
+      scnr.close();
    }
 }
