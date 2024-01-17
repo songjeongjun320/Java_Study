@@ -3,28 +3,36 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class PatternMatcher {
-
     public static void main(String[] args) {
         Scanner scnr = new Scanner(System.in);
-        Scanner fileScanner;
-        FileInputStream fileInStream;
         String fileName;
         String pattern;
+        ArrayList<String> arr = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<String>();
 
         System.out.print("Enter a file name to search in : ");
         fileName = scnr.nextLine(); // variable file name will be stored
 
-        try {
-            fileInStream = new FileInputStream(fileName);
-            fileScanner = new Scanner(fileInStream);
+        try{
+            arr = getWordList(fileName);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("Error: File not found, exiting...");
+            arr = null;
+        }
 
-            System.out.println("File read successfully, initiating pattern matcher...");
+        while (true){
+            if (arr == null){
+                break;
+            }
             System.out.print("Enter a pattern to match (or press Enter to exit): ");
             pattern = scnr.nextLine();
-
-        }
-        catch (FileNotFoundException e){
-            System.out.println("Error: File not found, exiting...");
+            if (pattern == ""){
+                System.out.println("Exiting...");
+                break;
+            }
+            result = getMatches(arr, pattern);
+            System.out.println(result);
         }
     }
 
@@ -36,8 +44,19 @@ public class PatternMatcher {
      * @param fileName - fileName from user
      * @return ArrayList which has all the words from fileName.txt file.
      */
-    public static ArrayList<String> getWordList(String fileName){
+    public static ArrayList<String> getWordList(String fileName)throws FileNotFoundException{
         ArrayList<String> arr = new ArrayList<String>();
+        Scanner fileScanner;
+        FileInputStream fileInStream;
+
+        fileInStream = new FileInputStream(fileName);
+        fileScanner = new Scanner(fileInStream);
+        System.out.println("File read successfully, initiating pattern matcher...");
+        while (fileScanner.hasNext()){
+            arr.add(fileScanner.next());    
+        }
+        fileScanner.close();
+
         return arr;
     }
 
@@ -53,8 +72,13 @@ public class PatternMatcher {
      * @return if it is, true
      */
     public static boolean isMatchAtIndex(String word, String pattern, int index){
-
-        return true;
+        if ((word.length() < index + 1) || (pattern.length() < index + 1)){
+            return false;
+        }
+        if ((pattern.charAt(index) == '_') || (pattern.charAt(index) == word.charAt(index))){
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -67,7 +91,15 @@ public class PatternMatcher {
      * @return if word includes the pattern, true
      */
     public static boolean isMatch(String word, String pattern){
-
+        int size = word.length();
+        if (word.length() < pattern.length()){
+            size = pattern.length();
+        }
+        for (int i = 0 ; i < size; i++){
+            if (!isMatchAtIndex(word, pattern, i)){
+                return false;
+            }
+        }
         return true;
     }
 
@@ -80,8 +112,13 @@ public class PatternMatcher {
      * @return - if it is, true
      */
     public static ArrayList<String> getMatches(ArrayList<String> wordList, String pattern){
-        ArrayList<String> arr = new ArrayList<String>();
-        return arr;
+        ArrayList<String> result = new ArrayList<String>();
+        for (int i = 0; i < wordList.size(); i++){
+            //System.out.println(wordList.get(i));
+            if (isMatch(wordList.get(i), pattern)){
+                result.add(wordList.get(i));
+            }
+        }
+        return result;
     }
-
 }
