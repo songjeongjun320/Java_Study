@@ -9,6 +9,9 @@ public class Numbers
          if (values[firstPos] != 0){
             firstPos = firstPos + 1;
          }
+         if (firstPos >= values.length){
+            break;
+         }
          if (values[lastPos] != 0){
             lastPos = lastPos - 1;
          }
