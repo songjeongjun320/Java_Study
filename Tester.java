@@ -1,4 +1,3 @@
-
 public class Tester
 {
    public static boolean isValid(int[] a, int upper)
