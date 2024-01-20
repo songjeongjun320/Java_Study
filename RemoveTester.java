@@ -16,12 +16,15 @@ public class RemoveTester
             count++;
          }
       }
-      for (int i = 0; i < size; i++){
+      int i = 0;
+      while (i < count){
          if (values[i] % 2 == 1){
             for (int j = i; j < values.length-1; j++){
                values[j] = values[j+1];
             }
+            continue;
          }
+         i++;
       }
       return count;
    }
