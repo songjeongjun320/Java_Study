@@ -38,15 +38,41 @@ public class hw1 extends Application {
         TextArea billArea = new TextArea();
         billArea.setEditable(false);
 
-        // Layout settings
+        // Layout settings for Eat and Drink sections
         VBox foodBox = new VBox(10, eggSandwich, chickenSandwich, bagel, potatoSalad);
-        VBox drinksBox = new VBox(10, blackTea, greenTea, coffee, orangeJuice);
-        HBox buttonsBox = new HBox(10, orderButton, cancelButton, confirmButton);
-        buttonsBox.setPadding(new Insets(10, 0, 0, 0));
+        foodBox.setPadding(new Insets(10));
+        VBox drinkBox = new VBox(10, blackTea, greenTea, coffee, orangeJuice);
+        drinkBox.setPadding(new Insets(10));
 
-        HBox root = new HBox(20, foodBox, drinksBox, billArea);
+        // Titles for Eat and Drink sections
+        VBox eatBox = new VBox(5, new Label("Eat:"), foodBox);
+        VBox drinkBoxWithLabel = new VBox(5, new Label("Drink:"), drinkBox);
+
+        HBox foodAndDrinkBox = new HBox(20, eatBox, drinkBoxWithLabel);
+        HBox.setHgrow(eatBox, Priority.ALWAYS);
+        HBox.setHgrow(drinkBoxWithLabel, Priority.ALWAYS);
+
+        VBox leftPane = new VBox(10, foodAndDrinkBox);
+        VBox.setVgrow(foodAndDrinkBox, Priority.ALWAYS);
+
+        VBox billBox = new VBox(new Label("Bill"), billArea);
+        billBox.setPadding(new Insets(10));
+        billBox.setPrefSize(200, 150);
+        VBox.setVgrow(billArea, Priority.ALWAYS);
+
+        HBox buttonsBox = new HBox(10, orderButton, cancelButton, confirmButton);
+        buttonsBox.setPadding(new Insets(10, 0, 5, 0)); // Reduce bottom padding to 5
+        buttonsBox.setSpacing(20);
+        HBox.setHgrow(orderButton, Priority.ALWAYS);
+        HBox.setHgrow(cancelButton, Priority.ALWAYS);
+        HBox.setHgrow(confirmButton, Priority.ALWAYS);
+
+        HBox root = new HBox(20, leftPane, billBox);
+        HBox.setHgrow(leftPane, Priority.ALWAYS);
+        HBox.setHgrow(billBox, Priority.ALWAYS);
         VBox mainLayout = new VBox(10, new Label("Joe’s Deli"), root, buttonsBox);
-        mainLayout.setPadding(new Insets(10));
+        mainLayout.setPadding(new Insets(20, 20, 10, 20)); // Reduce bottom padding to 10
+        VBox.setVgrow(root, Priority.ALWAYS);
 
         // Event handler for the Order button
         orderButton.setOnAction(e -> {
@@ -110,8 +136,18 @@ public class hw1 extends Application {
             drinksGroup.selectToggle(null);
         });
 
-        primaryStage.setScene(new Scene(mainLayout, 500, 300));
+        Scene scene = new Scene(mainLayout, 600, 400);
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Make the layout responsive
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+            billArea.setPrefWidth(newVal.doubleValue() * 0.4); // Adjust width dynamically
+        });
+
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
+            billArea.setPrefHeight(newVal.doubleValue() * 0.5); // Adjust height dynamically
+        });
     }
 
     public static void main(String[] args) {
